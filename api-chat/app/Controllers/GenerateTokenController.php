@@ -8,14 +8,14 @@ class GenerateTokenController implements SecretKeyInterface
 {
 
     
-    public static function generateToken($email)
+    public static function generateToken($infos)
     {
         $now = time();
         $future = strtotime('+1 month',$now);
         $secretKey = self::JWT_SECRET_KEY;
         $payload = array(
-            "iss" => "https://smartpass97.com", 
-            "jti"=>$email,
+            "iss" => "https://chat-test.com", 
+            "jti"=>$infos,
             "iat"=>$now,
             "exp"=>$future
         );

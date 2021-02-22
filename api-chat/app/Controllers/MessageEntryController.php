@@ -2,6 +2,7 @@
 
 namespace  App\Controllers;
 
+use App\Models\MessageEntry;
 use App\Models\ParticipationEntry;
 use App\Requests\CustomRequestHandler;
 use App\Response\CustomResponse;
@@ -12,12 +13,12 @@ use Respect\Validation\Exceptions\NestedValidationException;
 use Respect\Validation\Validator as v;
 use Illuminate\Pagination\Paginator;
 
-class ParticipationEntryController
+class MessageEntryController
 {
 
     protected $customResponse;
 
-    protected $participationEntry;
+    protected $MessageEntry;
 
     protected $validator;
 
@@ -25,23 +26,25 @@ class ParticipationEntryController
     public function __construct()
     {
         $this->customResponse = new CustomResponse();
+        $this->messageEntry = new MessageEntry();
         $this->participationEntry = new ParticipationEntry();
         $this->validator = new Validator();
+      
+
     }
 
-    public function listPartUserId(Response $response, Request $request, $id)
+    public function creerMessage(Response $response, Request $request)
     {
-        $participationList = $this->participationEntry::with('conversation.participant.utilisateur')
-                        ->where(['id_utilisateur'=>$id])
-                        // ->orderBy('dateCreation','desc')
-                        ->get()
-                        ->toArray();
+        $message = $this->messageEntry->create([
+            'contenu'=>CustomRequestHandler::getParam($request,'contenu'),
+            'id_utilisateur'=>CustomRequestHandler::getParam($request,'id_utilisateur'),
+            'id_conversation'=>CustomRequestHandler::getParam($request,'id_conversation')        
+        ]);
 
-        return $this->customResponse->is200Response($response,$participationList);
-    }
-
-    public function creerParticipation(Response $response, Request $request){
+        $responseMessage = $message;
        
+        return $this->customResponse->is200Response($response,$responseMessage);
     }
-    
+
+
 }

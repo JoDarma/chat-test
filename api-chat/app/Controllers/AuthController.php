@@ -2,7 +2,7 @@
 
 namespace  App\Controllers;
 
-use App\Models\Admin;
+use App\Models\UtilisateurEntry;
 use App\Requests\CustomRequestHandler;
 use App\Response\CustomResponse;
 use App\Validation\Validator;
@@ -15,13 +15,13 @@ use Firebase\JWT\JWT;
 class AuthController
 {
 
-    protected $adminEntry;
+    protected $utilisateurEntry;
     protected $customResponse;
     protected $validator;
 
     public function __construct()
     {
-        $this->adminEntry = new Admin();
+        $this->utilisateurEntry = new UtilisateurEntry();
         $this->customResponse = new CustomResponse();
         $this->validator = new Validator();
     }
@@ -30,9 +30,10 @@ class AuthController
     public function Register(Request $request, Response $response)
     {
        $this->validator->validate($request,[
-          "name"=>v::notEmpty(),
-           "addMail"=>v::notEmpty()->addMail(),
-           "password"=>v::notEmpty()
+            "nom"=>v::notEmpty(),
+            "prenom"=>v::notEmpty(),
+            "addMail"=>v::notEmpty()->email(),
+            "mdp"=>v::notEmpty()
        ]);
 
        if($this->validator->failed())
@@ -43,19 +44,25 @@ class AuthController
 
        if($this->addMailExist(CustomRequestHandler::getParam($request,"addMail")))
        {
-           $responseMessage = "addMail already exist";
+           $responseMessage = "Le mail existe déjà";
            return $this->customResponse->is400Response($response,$responseMessage);
        }
 
-       $passwordHash = $this->hashPassword(CustomRequestHandler::getParam($request,'password'));
+       $passwordHash = $this->hashPassword(CustomRequestHandler::getParam($request,'mdp'));
 
-       $this->adminEntry->create([
-          "name"=>CustomRequestHandler::getParam($request,"name"),
-           "addMail"=>CustomRequestHandler::getParam($request,"addMail"),
-           "password"=>$passwordHash
+       $userInfos = $this->utilisateurEntry->create([
+            "nom"=>CustomRequestHandler::getParam($request,"nom"),
+            "prenom"=>CustomRequestHandler::getParam($request,"prenom"),
+            "addMail"=>CustomRequestHandler::getParam($request,"addMail"),
+            "mdp"=>$passwordHash
        ]);
 
-       $responseMessage = "new adminEntry created successfully";
+       $data = array(
+        'id'=>$userInfos->id,
+        'addMail'=>$userInfos->addMail
+       );
+
+       $responseMessage =  GenerateTokenController::generateToken($data);
 
        return $this->customResponse->is200Response($response,$responseMessage);
     }
@@ -80,50 +87,50 @@ class AuthController
 
         if($verifyAccount==false)
         {
-            $responseMessage = "invalid Email or password";
+            $responseMessage = "Adresse mail ou mdp invalide";
             return $this->customResponse->is400Response($response,$responseMessage);
         }
 
-        $token = GenerateTokenController::generateToken(
-            CustomRequestHandler::getParam($request,"addMail")
-        );
-
-        $responseMessage = array("admin"=>$verifyAccount,"token"=>$token);
+        $data = array(
+            'id'=>$verifyAccount->id_utilisateur,
+            'addMail'=>$verifyAccount->addMail
+           );
     
-        
-        
-      
+        $responseMessage =  GenerateTokenController::generateToken($data);
+
         return $this->customResponse->is200Response($response,$responseMessage);
     }
 
     public function verifyAccount($password,$addMail)
     {
-        $count = $this->adminEntry->where(["addMail"=>$addMail])->count();
+        $count = $this->utilisateurEntry->where(["addMail"=>$addMail])->count();
         if($count==0)
         {
             return false;
         }
 
-        $adminEntry = $this->adminEntry->where(["addMail"=>$addMail])->first();
+        $utilisateurEntry = $this->utilisateurEntry->where(["addMail"=>$addMail])->first();
 
-        $hashedPassword = $adminEntry->mdp;
+        $hashedPassword = $utilisateurEntry->mdp;
+
         $verify = password_verify($password,$hashedPassword);
-
-        if($verify==false)
+        
+        if(!$verify)
         {
             return false;
         }
-        return $adminEntry;
+
+        return $utilisateurEntry;
     }
 
     public function hashPassword($password)
     {
-        return password_hash($password,PASSWORD_DEFAULT);
+        return password_hash($password,PASSWORD_BCRYPT);
     }
 
     public function addMailExist($addMail)
     {
-        $count = $this->adminEntry->where(['addMail'=>$addMail])->count();
+        $count = $this->utilisateurEntry->where(['addMail'=>$addMail])->count();
         if($count==0)
         {
             return false;
@@ -133,7 +140,6 @@ class AuthController
 
     public function verifyToken(Request $request,Response $response)
     {
-
         $decodedToken = GenerateTokenController::decodedToken(
                 CustomRequestHandler::getParam($request,"token")
             );

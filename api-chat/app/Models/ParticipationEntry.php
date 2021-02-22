@@ -1,29 +1,25 @@
 <?php
-
-
-namespace App\Models;
-
+namespace  App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 class ParticipationEntry extends Model
 {
-    protected $table = 'sp_participation';
+ protected $table = "participation";
+ 
+ protected $fillable  = [
+    "id_utilisateur",
+    "id_conversation",
+    "created_at"
+ ];
 
-    protected $fillable = [
-        "idParticipation",
-        "idUtilisateur",
-        "idCours",
-        "statusParticiation",
-        "dateCreation",
-        "creditPaye"
-    ];
+ public function utilisateur()
+ {
+    return $this->belongsTo(UtilisateurEntry::class, 'id_utilisateur', 'id_utilisateur');
+ }
 
-    public function utilisateur(){
-        return $this->belongsTo(UtilisateurEntry::class,'idUtilisateur','idUtilisateur');
-    }
+ public function conversation(){
+    return $this->belongsTo(ConversationEntry::class, 'id_conversation', 'id_conversation');
+ }
 
-    public function cours(){
-        return $this->belongsTo(CoursEntry::class, 'idCours','idCours');
-    }
-
+ 
 }

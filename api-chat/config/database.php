@@ -3,7 +3,7 @@
 $database_config = [
  'driver'=>'mysql',
     'host'=>'127.0.0.1:3306',
-    'database'=>'smartpass',
+    'database'=>'chat-test',
     'username'=>'j.darma',
     'password'=>'Darmajock971',
     'charset'=>'utf8',

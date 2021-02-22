@@ -16,26 +16,26 @@ return function (App $app)
     "cache" => 86400
   ]));
   
-  $app->add(
-    new \Tuupola\Middleware\JwtAuthentication([
-      "ignore"=>[
-        "/api/auth/login",
-        "/api/utilisateur/listAll",
-        "/api/auth/verifyToken"
-      ],
+  // $app->add(
+  //   new \Tuupola\Middleware\JwtAuthentication([
+  //     "ignore"=>[
+  //       "/api/auth/login",
+  //       "/api/auth/register",
+  //       "/api/utilisateur/listAll",
+  //     ],
 
-      "secret"=>\App\Interfaces\SecretKeyInterface::JWT_SECRET_KEY,
-      "error"=>function($response,$arguments)
-      {
-          $data["success"] = false;
-          $data["response"]=$arguments["message"];
-          $data["status_code"]= "401";
+  //     "secret"=>\App\Interfaces\SecretKeyInterface::JWT_SECRET_KEY,
+  //     "error"=>function($response,$arguments)
+  //     {
+  //         $data["success"] = false;
+  //         $data["response"]=$arguments["message"];
+  //         $data["status_code"]= "401";
 
-          return $response->withHeader("Content-type","application/json")
-              ->getBody()->write(json_encode($data,JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT ));
-      }
-    ])
-  );
+  //         return $response->withHeader("Content-type","application/json")
+  //             ->getBody()->write(json_encode($data,JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT ));
+  //     }
+  //   ])
+  // );
 
   $app->addErrorMiddleware(true,true,true);
 };
