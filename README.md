@@ -1,5 +1,8 @@
 # ChatTest
 
+# Installer base de données
+- fichier chat-test.sql
+
 # Installer dépendence API PHP 
 - cd api-chat
 - composer install
@@ -11,6 +14,8 @@
 # Démarrer angular 
 - npm install
 - ng serve
+
+
 
 Chat fonctionnel dans l'envoie et la réception des messages mais non instantané.
 Difficultées rencontrée à la configuration de websocket pour le temp-réel.
