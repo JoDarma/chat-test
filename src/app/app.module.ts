@@ -1,5 +1,6 @@
 import { HttpClientModule } from '@angular/common/http';
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, Injector, NgModule } from '@angular/core';
+
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -9,12 +10,14 @@ import { HomeComponent } from './home/home.component';
 import { AuthGuard } from './service/auth-guard.service';
 import { ConversationComponent } from './conversation/conversation.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { UtilisateurListModalComponent } from './utilisateur-list-modal/utilisateur-list-modal.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
-    ConversationComponent
+    ConversationComponent,
+    UtilisateurListModalComponent
   ],
   imports: [
     BrowserModule,
@@ -22,9 +25,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     HttpClientModule,
     AuthModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+
   ],
   providers: [AuthGuard],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+
 })
 export class AppModule { }

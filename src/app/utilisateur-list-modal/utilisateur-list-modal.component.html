@@ -1,0 +1,15 @@
+<div class="modal-content">
+    <div class="row">
+        <div class="col">
+            <div class="list-group">
+                <div class="list-group-item list-group-item-action" *ngFor="let utilisateur of utilisateurList">
+                  {{utilisateur.nom}} {{utilisateur.prenom}} - {{utilisateur.addMail}}
+                  <button *ngIf="type ==='prive'" class="btn btn-primary btn-sm" (click)="creerConversation('',utilisateur.id_utilisateur)">Discuter</button>
+                  <input class="form-check-input" *ngIf="type ==='groupe'" type="checkbox" value="" (click)="addPart(utilisateur.id_utilisateur)">
+
+                </div>
+            </div>
+            <button class="btn btn-primary m-3" *ngIf="type==='groupe'" (click)="creerConversation('groupe')">Créer groupe</button>
+        </div>
+    </div>
+</div>

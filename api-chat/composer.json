@@ -13,7 +13,9 @@
         "illuminate/database": "^8.0.0",
   
         "illuminate/pagination":"^8.0.0",
-        "tuupola/cors-middleware": "^1.2"
+        "tuupola/cors-middleware": "^1.2",
+        "cboden/ratchet": "^0.4.3",
+        "react/zmq": "0.2.*|0.3.*"
     },
 
     "autoload": {

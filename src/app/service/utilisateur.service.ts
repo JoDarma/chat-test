@@ -7,8 +7,6 @@ import { Utilisateur } from '../models/utilisateur.model';
 import { CustomResponse } from '../models/customResponse.model';
 import { ConversationWithMessage } from '../models/conversation.model';
 
-
-
 @Injectable({ providedIn: 'root' })
 
 export class UtilisateurService {
@@ -37,17 +35,14 @@ export class UtilisateurService {
       'Something bad happened; please try again later.');
   }
 
-  getUtilisateurs(){
+  getUtilisateurs(id:number){
     return this.http
-    .get('/api/utilisateur/listAll')
-        .pipe(map(
-            (resp:any) => {
-                console.log(resp);
-                this.utilisateurList = resp.response
-                return this.utilisateurList
-            }));
-        }
+    .get('/api/utilisateur/'+id+'/listAll')
+      .pipe(map(
+          (resp:any) => {
+              console.log(resp);
+              this.utilisateurList = resp.response
+              return this.utilisateurList
+          }));
   }
-
-   
 }

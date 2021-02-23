@@ -31,72 +31,16 @@ class UtilisateurEntryController
 
     }
 
-    public function listAll(Response $response, Request $request)
+    public function listAll(Response $response, Request $request, $id)
     {
 
         $utilisateurList = $this->utilisateurEntry->SELECT('*')
+                            ->where('id_utilisateur', '!=', $id)
                             ->get()
                             ->toArray();
 
         return $this->customResponse->is200Response($response,$utilisateurList);
 
-    }
-
-    public function updateUtilisateur(Response $response, $id, Request $request)
-    {
-        $this->validator->validate($request,[
-            "nom"=>v::notEmpty(),
-            "prenom"=>v::notEmpty(),
-            "dateNaissance"=>v::notEmpty(),
-            "addMail"=>v::notEmpty()->email(),
-            "numeroTel"=>v::notEmpty(),
-            "adressePostal"=>v::notEmpty(),
-            "idVille"=>v::notEmpty()
-         ]);
-
-        if($this->validator->failed())
-        {
-            $responseMessage = $this->validator->errors;
-            return $this->customResponse->is400Response($response,$responseMessage);
-        }
-  
-        $this->utilisateurEntry->where(["idUtilisateur"=>$id])->update([
-            'nom'=>CustomRequestHandler::getParam($request,'nom'),
-            'prenom'=>CustomRequestHandler::getParam($request,'prenom'),
-            'dateNaissance'=>date('Y-m-d',strtotime(CustomRequestHandler::getParam($request, 'dateNaissance'))),
-            'addMail'=>CustomRequestHandler::getParam($request, 'addMail'),
-            'numeroTel'=>CustomRequestHandler::getParam($request,'numeroTel'),
-            'adressePostal'=>CustomRequestHandler::getParam($request,'adressePostal'),
-            "idVille"=>CustomRequestHandler::getParam($request, 'idVille'),
-            
-        ]);
-
-        $responseMessage = "Modification effectuée";
-
-        return $this->customResponse->is200Response($response,$responseMessage);
-    }
-
-    public function updateMdp(Response $response, $id, Request $request)
-    {
-        $this->validator->validate($request,[
-            "motDePasse"=>v::notEmpty()
-         ]);
-
-        if($this->validator->failed())
-        {
-            $responseMessage = $this->validator->errors;
-            return $this->customResponse->is400Response($response,$responseMessage);
-        }
-
-        $passwordHash = $this->hashPassword(CustomRequestHandler::getParam($request,'motDePasse'));
-        $this->utilisateurEntry->where(["idUtilisateur"=>$id])
-                            ->update([
-                                'motDePasse'=>$passwordHash,
-                            ]);
-
-        $responseMessage = "Mdp modifié";
-
-        return $this->customResponse->is200Response($response,$responseMessage);
     }
 
     public function hashPassword($password)

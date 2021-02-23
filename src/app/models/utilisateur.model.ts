@@ -10,7 +10,7 @@ export class Utilisateur{
 
         public addMail,
     
-        public motDePasse,
+        public mdp,
 
         public idUtilisateur?,
 

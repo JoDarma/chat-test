@@ -3,10 +3,8 @@ import { map } from 'rxjs/operators';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Utilisateur } from '../models/utilisateur.model';
 import { CustomResponse } from 'src/app/models/customResponse.model';
 import { ConversationWithMessage } from '../models/conversation.model';
-
 
 
 @Injectable({ providedIn: 'root' })
@@ -15,7 +13,7 @@ export class ConvService {
 
     conversationList : ConversationWithMessage[]=[]
 
-    convMessage : ConversationWithMessage[]=[]
+    convMessage:any
 
     constructor(
     private router: Router,
@@ -44,7 +42,6 @@ export class ConvService {
     .get('/api/participation/'+id+'/list')
         .pipe(map(
         (resp:CustomResponse) => {
-            console.log(resp);
             this.conversationList = resp.response
             return this.conversationList
         }));
@@ -55,9 +52,9 @@ export class ConvService {
     .get('/api/conv/'+idConv)
         .pipe(map(
         (resp:CustomResponse) => {
-            console.log(resp);
-            this.convMessage = resp.response[0].messages
-            return this.convMessage;
+            this.convMessage = resp.response
+            console.log(resp)
+            return this.convMessage
         }));
   }
 
@@ -72,10 +69,27 @@ export class ConvService {
       .pipe(map(
         (resp:CustomResponse) => {
             console.log(resp);
-            this.convMessage.push(resp.response)
+            this.convMessage[0].messages.push(resp.response)
             return this.convMessage
         }));
   }
 
+  creerConv(participant:number[], type:string, userId){
+    let data={
+      "libelle":'',
+      "type_conversation":type,
+      "participants":participant
+    }
+
+    console.log(data)
+  
+    return this.http.post('api/conv/creer', data)
+      .pipe(map(
+        (resp:CustomResponse) => {
+            console.log(resp);
+            this.getConv(userId)
+            return this.convMessage
+        }));
+  }
    
 }

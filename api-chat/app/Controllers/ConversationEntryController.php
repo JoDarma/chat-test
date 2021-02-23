@@ -44,17 +44,18 @@ class ConversationEntryController
 
     }
 
-    public function creerConv(Response $response, $id, Request $request)
+    public function creerConv(Response $response, Request $request)
     {
-        $id = $this->conversationEntry->create([
+        $conv = $this->conversationEntry->create([
             'libelle'=>CustomRequestHandler::getParam($request,'libelle'),
             'type_conversation'=>CustomRequestHandler::getParam($request,'type_conversation'),            
         ]);
 
-        $lastInsertId = $id->id;
-        $responseMessage = "Conversation créé";
+        $lastInsertId = $conv->id;
+
         $participants = CustomRequestHandler::getParam($request,'participants');
         $nbParticipants = sizeof($participants);
+       
 
         foreach($participants as $val){
             $part = $this->participationEntry->create([
@@ -62,6 +63,9 @@ class ConversationEntryController
                 'id_conversation'=>$lastInsertId,
             ]);
         }
+
+        $responseMessage = "créé";
+
         return $this->customResponse->is200Response($response,$responseMessage);
     }
 

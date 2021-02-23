@@ -16,8 +16,8 @@ return function (App $app)
         });
     
         $app->group("/conv",function($app){
+            $app->post("/creer",[\App\Controllers\ConversationEntryController::class,"creerConv"]);
             $app->get("/{id}",[\App\Controllers\ConversationEntryController::class,"getConvId"]);
-            $app->get("/{id}/creer",[\App\Controllers\ConversationEntryController::class,"creerConv"]);
         });
     
         $app->group("/participation",function($app){
@@ -29,6 +29,8 @@ return function (App $app)
             $app->post("/creer",[\App\Controllers\MessageEntryController::class,"creerMessage"]);
 
         });
+
+        $app->get("/utilisateur/{id}/listAll",[\App\Controllers\UtilisateurEntryController::class,"listAll"]);
 
         
       
