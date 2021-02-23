@@ -46,12 +46,16 @@ export class UtilisateurListModalComponent implements OnInit {
       this.participant.push(userId)
     }
     this.participant.push(this.currentUser)
+    
     this.conversationService.creerConv(this.participant,this.type, userId).subscribe(
       (resp)=>{
         this.participant=[]
         this.passEntry.emit(true);
 
         this.activeModal.close()
+      },
+      ()=>{
+
       }
     )
   }

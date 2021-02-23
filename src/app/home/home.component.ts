@@ -45,7 +45,6 @@ export class HomeComponent implements OnInit {
         console.log(this.convList)
       }
     )
-
   }
 
   getConvMessage(idConv){
@@ -53,7 +52,7 @@ export class HomeComponent implements OnInit {
     this.convService.getConvMessage(idConv).subscribe(
       (resp)=>{
         this.convMessage= resp[0]
-        
+
         console.log(resp[0])
       }
     )
@@ -85,11 +84,7 @@ export class HomeComponent implements OnInit {
 
     modalRef.componentInstance.passEntry.subscribe(
       (receivedEntry) => {
-        this.getConv()
-        // console.log(this.coursList)
-        // this.calendarOptions.events=""
-        // setTimeout(() => this.calendarOptions.events=this.coursList);
-        
+        this.getConv()      
     })
   }
 

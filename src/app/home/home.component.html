@@ -1,51 +1,60 @@
-<div class="container p-5">
+<div class="container  p-5">
     <div class="row">
         <div class="col-lg-12">
-            <button class="btn btn-primary mr-2" (click)="onWiewUser('prive')">Nouvelle discussion</button>
-            <button class="btn btn-success mr-2" (click)="onWiewUser('groupe')">Nouveau groupe</button>
+      
             <button class="btn btn-danger mr-2" (click)="logout()">Se déconnecter</button>
         </div>
     </div>
-    <div class="row mt-2">
-        <div class="col-lg-4">
-            <div class="list-group">
-                <a  class="list-group-item list-group-item-action" *ngFor="let conv of convList" (click)="getConvMessage(conv.id_conversation)">
-                    <!-- <h3>{{conv.conversation.type_conversation | uppercase}}</h3> -->
-
-                    <p>Participants : 
+    <div class="row mt-2 shadow border rounded-lg bg-light" style="height:700px">
+        <div class="col-lg-4  rounded-lg border-right">
+            <div class="list-group" style="height:450px;overflow: auto;">
+                <h3 class="border-bottom p-3 mt-3 sticky-top bg-light shadow-sm">Liste des discussions</h3>
+                <a class="list-group-item list-group-item-action mt-3 rounded-lg shadow-sm" *ngFor="let conv of convList" (click)="getConvMessage(conv.id_conversation)">
+                    <p>Participants :
                         <span *ngFor="let participant of conv.conversation.participant">
-                            <i *ngIf="participant.utilisateur.id_utilisateur != currentUser">{{participant.utilisateur.prenom}},</i>
-                            <i *ngIf="participant.utilisateur.id_utilisateur == currentUser"> Vous</i>
+                            <i *ngIf="participant.utilisateur.id_utilisateur != currentUser"> {{participant.utilisateur.prenom}} </i>
+                            <i *ngIf="participant.utilisateur.id_utilisateur == currentUser"> Vous, </i>
                            
                         </span>
                     
                     </p>
-                    
+                   <small><i>{{conv.conversation.type_conversation | uppercase}}</i></small>
                 </a>
+            
+            </div>
+
+            <div class="mt-4 text-center border-top pt-4">
+                <button class="btn btn-primary btn-sm mr-1" (click)="onWiewUser('prive')">Nouvelle discussion</button>
+                <button class="btn btn-success btn-sm" (click)="onWiewUser('groupe')">Nouveau groupe</button>
             </div>
         </div>
-        <div class="col-lg-8 "  style="height:800px" *ngIf="convMessage">
-            <div class="row  " style="height:500px;overflow:auto;">
+        <div class="col-lg-8 " *ngIf="convMessage">
+            <div class="row">
                 <div class="col-lg-12">
-                    <div class="bg-light borer-rounded-top p-3 sticky-top rounded-lg">
-                        Participant : 
-                        <span *ngFor="let participant of convMessage.participant">{{participant.utilisateur.prenom}},</span>
+                    <div class="bg-light p-3 sticky-top  border-bottom">
+                        <h3>Participants</h3>
+                        <span *ngFor="let participant of convMessage.participant">
+                            <i *ngIf="participant.utilisateur.id_utilisateur != currentUser"> {{participant.utilisateur.prenom}} </i>
+                            <i *ngIf="participant.utilisateur.id_utilisateur == currentUser"> Vous, </i>
+                           
+                        </span>
                     </div>
-         
-                    <div *ngFor="let message of convMessage.messages"
-                    [ngClass]="{'text-left':true,'border':true,'rounded-lg':true,'p-3':true, 'bg-light':true, 'm-3':true,
-                                    'text-right' : message.id_utilisateur == currentUser,
-                                    'bg-white': message.id_utilisateur == currentUser}" >
-                        <p>{{message.contenu}}</p>
-                        <small><i class="text">{{message.created_at | date:'dd-MM-y HH:mm'}}</i></small>
+                    <div class="bg-white rounded-lg mt-2" style="height:450px;overflow:auto;">
+                        <div *ngFor="let message of convMessage.messages"
+                        [ngClass]="{'text-left':true,'border':true,'rounded-lg':true,'p-3':true, 'bg-light':true, 'm-3':true,
+                                        'text-right' : message.id_utilisateur == currentUser,
+                                        'bg-white': message.id_utilisateur == currentUser}" >
+                            <p>{{message.contenu}}</p>
+                            <small><i class="text">{{message.created_at | date:'dd-MM-y - HH:mm'}}</i></small>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="row mt-4">
+            <div class="row mt-4 border-top p-4">
                 <div class="input-group">
-                    <input class="form-control rounded-lg" [(ngModel)]="messageToSend" placeholder="Entrez votre message"/>
-                    <div class="input-group-prepend">
-                        <button class="input-group-text btn btn-success rounded-lg" (click)="sendMessage(convMessage.id_conversation)">Envoyer</button>
+                    <input class="form-control rounded-lg col-lg-10" [(ngModel)]="messageToSend" placeholder="Entrez votre message"/>
+                    <div class="input-group-prepend ml-3">
+                        <button class=" btn btn-success rounded-lg" (click)="sendMessage(convMessage.id_conversation)">Envoyer</button>
                     </div>
                 </div> 
             </div>

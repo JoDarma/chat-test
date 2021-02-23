@@ -1,15 +1,21 @@
-<div class="modal-content">
-    <div class="row">
-        <div class="col">
-            <div class="list-group">
-                <div class="list-group-item list-group-item-action" *ngFor="let utilisateur of utilisateurList">
-                  {{utilisateur.nom}} {{utilisateur.prenom}} - {{utilisateur.addMail}}
-                  <button *ngIf="type ==='prive'" class="btn btn-primary btn-sm" (click)="creerConversation('',utilisateur.id_utilisateur)">Discuter</button>
-                  <input class="form-check-input" *ngIf="type ==='groupe'" type="checkbox" value="" (click)="addPart(utilisateur.id_utilisateur)">
+<div class="modal-header">
+    <h3>Liste des utilisateurs</h3>
+</div>
 
+
+    <div class="row  p-3">
+        <div class="col">
+            <small *ngIf="type ==='groupe'"><i>Votre groupe : {{participant.length}} (min > 2 pers)</i></small>
+
+            <div class="list-group border-none">
+                <div class="list-group-item list-group-item-action" *ngFor="let utilisateur of utilisateurList">
+                  <p>{{utilisateur.nom}} {{utilisateur.prenom}} - {{utilisateur.addMail}}</p>
+                  <button *ngIf="type ==='prive'" class="btn btn-primary btn-sm" (click)="creerConversation('',utilisateur.id_utilisateur)">Discuter</button>
+                  <button *ngIf="type ==='groupe'" class="btn btn-sm btn-success" (click)="addPart(utilisateur.id_utilisateur)">Ajouter</button> 
+                  
                 </div>
             </div>
-            <button class="btn btn-primary m-3" *ngIf="type==='groupe'" (click)="creerConversation('groupe')">Créer groupe</button>
+
+            <button class="btn btn-primary m-3 text-right" *ngIf="type==='groupe'" (click)="creerConversation('groupe')" [disabled]="participant.length<2">Créer groupe</button>
         </div>
     </div>
-</div>
