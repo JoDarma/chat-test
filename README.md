@@ -9,6 +9,7 @@
 - php -S 127.0.0.1:8080 -t public public/index.php
 
 # Démarrer angular 
+- npm install
 - ng serve
 
 Chat fonctionnel dans l'envoie et la réception des messages mais non instantané.
